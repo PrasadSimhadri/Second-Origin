@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, type Bill } from '@/lib/api';
+import { api, type Bill } from '../../lib/api';
 import { supabase } from '@/lib/supabase-client';
 
 export default function HistoryPage() {

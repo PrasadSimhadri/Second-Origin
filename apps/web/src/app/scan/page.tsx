@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase-client';
-import { api, type Product } from '@/lib/api';
+import { api, type Product } from '../../lib/api';
 import { BrowserMultiFormatReader } from '@zxing/library';
 
 export default function ScanPage() {

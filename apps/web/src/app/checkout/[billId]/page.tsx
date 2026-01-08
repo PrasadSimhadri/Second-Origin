@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, type Bill, type BillItem } from '@/lib/api';
+import { api, type Bill, type BillItem } from '../../../lib/api';
 import QRCode from 'qrcode';
 import { supabase } from '@/lib/supabase-client';
 
