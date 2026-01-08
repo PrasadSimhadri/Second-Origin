@@ -234,6 +234,13 @@ class ApiClient {
         return this.request<User[]>(`/admin/users${params}`);
     }
 
+    async createUser(data: Partial<UserProfile> & { password?: string }) {
+        return this.request<UserProfile>('/admin/users', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+
     async updateUserStatus(userId: string, action: 'block' | 'unblock', reason?: string) {
         return this.request('/admin/users', {
             method: 'PUT',

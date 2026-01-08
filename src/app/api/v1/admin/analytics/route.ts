@@ -62,6 +62,11 @@ export async function GET(request: NextRequest) {
             }
         });
 
+        // Cache for 60 seconds
+        const headers = {
+            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30'
+        };
+
         return NextResponse.json({
             totalBills,
             totalRevenue,
@@ -72,7 +77,7 @@ export async function GET(request: NextRequest) {
             falsePositiveRate: Number(falsePositiveRate),
             flagsByReason,
             flagsByGuard: Array.from(guardMap.values())
-        });
+        }, { headers });
     } catch (err) {
         console.error('Analytics error:', err);
         return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });

@@ -55,7 +55,12 @@ export async function GET(request: NextRequest) {
             })
         );
 
-        return NextResponse.json(enrichedBills);
+        // Cache for 30 seconds
+        const headers = {
+            'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=10'
+        };
+
+        return NextResponse.json(enrichedBills, { headers });
     } catch (err) {
         console.error('Admin bills error:', err);
         return NextResponse.json({ error: 'Failed to fetch bills' }, { status: 500 });
