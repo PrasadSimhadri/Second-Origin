@@ -53,8 +53,8 @@ export async function POST(
                 .single();
 
             if (originalFlag?.bill) {
-                const customerId = (originalFlag.bill as { customer_id: string }).customer_id;
-                await client.rpc('increment_confirmed_flags', { user_id: customerId });
+                const bill = originalFlag.bill as unknown as { customer_id: string };
+                await client.rpc('increment_confirmed_flags', { user_id: bill.customer_id });
             }
         }
 
