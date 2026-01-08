@@ -102,7 +102,7 @@ export class AuthService {
         });
 
         return {
-            user: authData.user,
+            user: authUser,
             session: loginError ? null : loginData.session,
             message: 'Registration successful',
         };
@@ -137,12 +137,15 @@ export class AuthService {
         }
 
         // Update device fingerprint if provided
+        // Device fingerprint update removed - column not in schema
+        /*
         if (dto.deviceFingerprint) {
             await adminClient
                 .from('users')
                 .update({ device_fingerprint: dto.deviceFingerprint })
                 .eq('id', data.user.id);
         }
+        */
 
         return {
             user: data.user,
