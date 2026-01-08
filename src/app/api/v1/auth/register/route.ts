@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(result, { status: 201 });
     } catch (error) {
+        console.error('Registration error:', error);
         const message = error instanceof Error ? error.message : 'Registration failed';
         return NextResponse.json({ error: message }, { status: 400 });
     }

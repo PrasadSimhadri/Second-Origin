@@ -27,36 +27,72 @@ export interface UpdateProfileDto {
 export class AuthService {
     static async register(dto: RegisterDto) {
         const adminClient = getAdminClient();
+        let authUser: { id: string } | null = null;
 
-        // Create auth user using admin client (auto-confirms email)
-        const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
-            email: dto.email,
-            password: dto.password,
-            email_confirm: true, // Auto-confirm email
-        });
+        try {
+            // 1. Create auth user
+            const { data, error } = await adminClient.auth.admin.createUser({
+                email: dto.email,
+                password: dto.password,
+                email_confirm: true,
+                user_metadata: { full_name: dto.fullName }
+            });
 
-        if (authError) {
-            throw new Error(authError.message);
-        }
+            if (error) {
+                // If user already exists, check if it's a "zombie" (no profile)
+                if (error.message.includes('already registered') || error.message.includes('already exists')) {
+                    // Check if profile exists
+                    const { data: profile } = await adminClient
+                        .from('users')
+                        .select('id')
+                        .eq('email', dto.email)
+                        .single();
 
-        if (!authData.user) {
-            throw new Error('Failed to create user');
-        }
+                    if (profile) {
+                        throw new Error('User already exists. Please login.');
+                    } else {
+                        // Zombie account! Delete and retry.
+                        // We can't delete by email directly in API easily without listing.
+                        // But we can tell the user "Account exists but setup failed. Please contact support" 
+                        // or try to recover?
+                        // Recovery: If we knew the ID.
+                        // Since we don't, we can't easily auto-fix.
+                        // But often 'admin.deleteUser' needs ID.
 
-        // Create user profile
-        const { error: profileError } = await adminClient.from('users').insert({
-            id: authData.user.id,
-            email: dto.email,
-            full_name: dto.fullName,
-            phone: dto.phone || null,
-            role: dto.role || 'customer',
-            status: 'active',
-        });
+                        // Workaround: Call listUsers (might be slow) or just fail with better message.
+                        // Assuming the user is stuck, let's look for the user via listUsers?
+                        // adminClient.auth.admin.listUsers() returns a page.
 
-        if (profileError) {
-            // Cleanup: delete auth user if profile creation fails
-            await adminClient.auth.admin.deleteUser(authData.user.id);
-            throw new Error('Failed to create user profile');
+                        // Actually, create user doesn't return ID if it fails.
+
+                        throw new Error('Account exists but incomplete. Please contact support to reset.');
+                    }
+                }
+                throw error;
+            }
+
+            if (!data.user) throw new Error('Failed to create user');
+            authUser = data.user;
+
+            // 2. Create profile
+            const { error: profileError } = await adminClient.from('users').insert({
+                id: data.user.id,
+                email: dto.email,
+                full_name: dto.fullName,
+                phone: dto.phone || null,
+                role: dto.role || 'customer',
+                status: 'active',
+            });
+
+            if (profileError) {
+                // If profile creation fails, delete the auth user to prevent zombies
+                await adminClient.auth.admin.deleteUser(data.user.id);
+                throw new Error('Failed to create profile: ' + profileError.message);
+            }
+
+        } catch (err) {
+            // Re-throw
+            throw err;
         }
 
         // Now sign in the user to get a session
