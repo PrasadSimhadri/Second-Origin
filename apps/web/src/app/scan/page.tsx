@@ -94,6 +94,13 @@ export default function ScanPage() {
 
     // Cart Logic
     const addToCart = async (barcode: string) => {
+        // Optimization: Check if item is already in cart to avoid API call
+        const existingItem = cart.find(item => item.product.barcode === barcode);
+        if (existingItem) {
+            incrementQty(existingItem.product.id);
+            return;
+        }
+
         setLoading(true);
         try {
             const product = await api.getProductByBarcode(barcode);
@@ -101,13 +108,7 @@ export default function ScanPage() {
                 alert('Product not found');
                 return;
             }
-            setCart(prev => {
-                const existing = prev.find(p => p.product.id === product.id);
-                if (existing) {
-                    return prev.map(p => p.product.id === product.id ? { ...p, quantity: p.quantity + 1 } : p);
-                }
-                return [...prev, { product, quantity: 1 }];
-            });
+            addToCartDirect(product);
         } catch (error) {
             alert('Failed to add product');
         } finally {
@@ -126,6 +127,19 @@ export default function ScanPage() {
         setManualOpen(false);
         setManualQuery('');
         setSearchResults([]);
+    };
+
+    const incrementQty = (productId: string) => {
+        setCart(prev => prev.map(p => p.product.id === productId ? { ...p, quantity: p.quantity + 1 } : p));
+    };
+
+    const decrementQty = (productId: string) => {
+        setCart(prev => prev.map(p => {
+            if (p.product.id === productId) {
+                return { ...p, quantity: Math.max(0, p.quantity - 1) };
+            }
+            return p;
+        }).filter(p => p.quantity > 0));
     };
 
     const removeFromCart = (productId: string) => {
@@ -190,11 +204,12 @@ export default function ScanPage() {
                             <div key={item.product.id} className="card flex justify-between items-center">
                                 <div>
                                     <div className="font-medium text-white">{item.product.name}</div>
-                                    <div className="text-sm text-slate-400">Qty: {item.quantity} × ₹{item.product.price}</div>
+                                    <div className="text-sm text-slate-400">₹{item.product.price} / unit</div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="font-medium text-white">₹{item.product.price * item.quantity}</div>
-                                    <button onClick={() => removeFromCart(item.product.id)} className="text-red-400 text-xl font-bold">×</button>
+                                <div className="flex items-center gap-3 bg-slate-800 rounded-lg p-1">
+                                    <button onClick={() => decrementQty(item.product.id)} className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded hover:bg-slate-600 text-lg font-bold">-</button>
+                                    <span className="w-6 text-center font-bold">{item.quantity}</span>
+                                    <button onClick={() => incrementQty(item.product.id)} className="w-8 h-8 flex items-center justify-center bg-blue-600 rounded hover:bg-blue-500 text-lg font-bold">+</button>
                                 </div>
                             </div>
                         ))}

@@ -147,6 +147,17 @@ export default function CheckoutPage({ params }: { params: Promise<{ billId: str
                                 <div className="text-slate-400 text-sm mt-2">
                                     Bill #{bill?.bill_number}
                                 </div>
+                                <div className="mt-8 text-center p-4 bg-slate-800/50 rounded-lg w-full">
+                                    <div className="text-slate-400 text-xs uppercase tracking-wide mb-1">Order Time</div>
+                                    <div className="text-white font-mono text-lg mb-4">
+                                        {new Date(bill!.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </div>
+
+                                    <div className="text-slate-400 text-xs uppercase tracking-wide mb-1">Scan to Exit Before</div>
+                                    <div className="text-red-400 font-mono text-xl font-bold">
+                                        {new Date(new Date(bill!.created_at).getTime() + 30 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
