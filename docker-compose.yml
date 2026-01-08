@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  landing:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./apps/landing:/usr/share/nginx/html
+    restart: always
+
   backend:
     build:
       context: .

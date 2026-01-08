@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScanKart - Project Hub</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #334155;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-size: 1.25rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+        }
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .card h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+        }
+        .card p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .badge {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+        footer {
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ScanKart</h1>
+        <p class="subtitle">Next-Gen Scan & Go Checkout System</p>
+        
+        <div class="grid">
+            <a href="http://localhost:3002" target="_blank" class="card">
+                <div class="icon">📱</div>
+                <h2>Customer App</h2>
+                <p>Mobile PWA for shoppers to scan items, manage cart, and pay seamlessly.</p>
+                <div class="badge">Port 3002</div>
+            </a>
+
+            <a href="http://localhost:3003" target="_blank" class="card">
+                <div class="icon">👮</div>
+                <h2>Guard App</h2>
+                <p>Security interface for verifying exit QR codes and voice-assisted checks.</p>
+                <div class="badge">Port 3003</div>
+            </a>
+
+            <a href="http://localhost:3004" target="_blank" class="card">
+                <div class="icon">📊</div>
+                <h2>Admin Dashboard</h2>
+                <p>Control center for analytics, threshold management, and incident resolution.</p>
+                <div class="badge">Port 3004</div>
+            </a>
+
+            <a href="http://localhost:3001/api/v1" target="_blank" class="card">
+                <div class="icon">⚙️</div>
+                <h2>Backend API</h2>
+                <p>NestJS microservices powering the entire ecosystem.</p>
+                <div class="badge">Port 3001</div>
+            </a>
+        </div>
+        
+        <footer>
+            <p>ScanKart • Built for Hackathon Demo</p>
+        </footer>
+    </div>
+</body>
+</html>
