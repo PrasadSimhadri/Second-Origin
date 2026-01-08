@@ -4,17 +4,11 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:backend": "turbo run dev --filter=backend",
-    "dev:customer": "turbo run dev --filter=customer",
-    "dev:guard": "turbo run dev --filter=guard",
-    "dev:admin": "turbo run dev --filter=admin",
+    "dev:web": "turbo run dev --filter=web",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "db:migrate": "cd supabase && npx supabase db push",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "db:migrate": "cd supabase && npx supabase db push"
   },
   "devDependencies": {
     "prettier": "^3.7.4",
