@@ -1,11 +1,12 @@
 services:
   - type: web
     name: scankart-backend
-    env: node
+    env: docker
     plan: free
     region: singapore # Optional: Choose closest region
-    buildCommand: npm install && npx turbo run build --filter=backend
-    startCommand: node apps/backend/dist/main
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    # buildCommand and startCommand are ignored for Docker
     envVars:
       - key: PORT
         value: 10000
