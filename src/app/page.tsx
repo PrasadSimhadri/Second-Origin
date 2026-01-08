@@ -1,8 +1,34 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase-client';
+import { api } from '@/lib/api';
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      api.setToken(session.access_token);
+      try {
+        const profile = await api.getProfile();
+        if (profile.role === 'admin') router.replace('/admin/dashboard');
+        else if (profile.role === 'guard') router.replace('/guard/dashboard');
+        else router.replace('/scan');
+      } catch {
+        // If profile fetch fails, stay on landing or go to login?
+        // Stay on landing allows them to click login and fix it.
+      }
+    }
+  };
+
   return (
     <main className="min-h-screen bg-slate-900 text-white">
       {/* Hero Section */}

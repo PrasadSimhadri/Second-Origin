@@ -38,6 +38,7 @@ export default function GuardDashboardPage() {
     const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [todayStats, setTodayStats] = useState({ verified: 0, flagged: 0 });
+    const [showFlagModal, setShowFlagModal] = useState(false);
 
     useEffect(() => {
         initSession();
@@ -51,6 +52,20 @@ export default function GuardDashboardPage() {
             return;
         }
         api.setToken(session.access_token);
+    };
+
+    const handleFlag = async (reason: string) => {
+        if (!verificationResult?.bill) return;
+
+        try {
+            await api.createFlag(verificationResult.bill.id, reason, 'Flagged by guard via dashboard');
+            setTodayStats(prev => ({ ...prev, flagged: prev.flagged + 1 }));
+            alert('Bill flagged successfully');
+            setShowFlagModal(false);
+            setVerificationResult(null);
+        } catch (error) {
+            alert('Failed to flag bill');
+        }
     };
 
     const startScanning = async () => {
@@ -203,7 +218,7 @@ export default function GuardDashboardPage() {
                 )}
 
                 {verificationResult && (
-                    <div className={`card max-w-sm w-full text-center ${verificationResult.valid ? 'border-green-500/50' : 'border-red-500/50'}`}>
+                    <div className={`card max-w-md w-full text-center ${verificationResult.valid ? 'border-green-500/50' : 'border-red-500/50'}`}>
                         <div className={`w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center ${verificationResult.valid ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
                             {verificationResult.valid ? (
                                 <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,15 +238,18 @@ export default function GuardDashboardPage() {
                                 <p className="mb-2">Bill #{verificationResult.bill.bill_number}</p>
                                 <p className="text-xl font-bold text-white mb-4">₹{verificationResult.bill.total_amount.toFixed(2)}</p>
 
-                                {/* Items List */}
+                                {/* Items List - Expanded */}
                                 {verificationResult.payload?.items && verificationResult.payload.items.length > 0 && (
                                     <div className="text-left mt-4 border-t border-slate-700 pt-4">
                                         <p className="text-sm font-semibold text-slate-300 mb-2">Items ({verificationResult.bill.total_items}):</p>
-                                        <div className="max-h-40 overflow-y-auto space-y-1">
+                                        <div className="max-h-[60vh] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
                                             {verificationResult.payload.items.map((item, idx) => (
-                                                <div key={idx} className="flex justify-between text-sm">
-                                                    <span>{item.quantity}x {item.name}</span>
-                                                    <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                                                <div key={idx} className="flex justify-between items-center text-sm bg-slate-800/50 p-2 rounded">
+                                                    <div>
+                                                        <div className="text-white font-medium">{item.name}</div>
+                                                        <div className="text-xs text-slate-500">Qty: {item.quantity}</div>
+                                                    </div>
+                                                    <span className="font-mono text-slate-300">₹{(item.price * item.quantity).toFixed(2)}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -239,15 +257,55 @@ export default function GuardDashboardPage() {
                                 )}
                             </div>
                         )}
-                        <button
-                            onClick={() => setVerificationResult(null)}
-                            className="btn btn-secondary mt-6 w-full py-3"
-                        >
-                            Scan Next
-                        </button>
+
+                        <div className="flex gap-3 mt-6">
+                            <button
+                                onClick={() => setVerificationResult(null)}
+                                className="flex-1 btn btn-secondary py-3"
+                            >
+                                Scan Next
+                            </button>
+                            {verificationResult.bill && (
+                                <button
+                                    onClick={() => setShowFlagModal(true)}
+                                    className="flex-1 px-4 py-3 bg-red-500/20 text-red-300 border border-red-500/50 rounded-xl hover:bg-red-500/30 transition-colors font-medium"
+                                >
+                                    Flag Bill
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
+
+            {/* Flag Modal */}
+            {showFlagModal && verificationResult?.bill && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl p-6">
+                        <h2 className="text-xl font-bold text-white mb-2">Flag Suspicious Bill</h2>
+                        <p className="text-slate-400 text-sm mb-6">Start report for Bill #{verificationResult.bill.bill_number}</p>
+
+                        <div className="space-y-3 mb-6">
+                            {['Item Mismatch', 'Payment Failed', 'Suspicious Activity', 'Other'].map(r => (
+                                <button
+                                    key={r}
+                                    onClick={() => handleFlag(r)}
+                                    className="w-full text-left px-4 py-3 rounded-xl bg-slate-700/50 hover:bg-red-500/20 hover:text-red-300 transition-colors border border-transparent hover:border-red-500/30"
+                                >
+                                    {r}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setShowFlagModal(false)}
+                            className="w-full py-3 text-slate-400 hover:text-white"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Voice Button */}
             <div className="fixed bottom-6 right-6">

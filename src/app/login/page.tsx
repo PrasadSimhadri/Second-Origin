@@ -22,7 +22,7 @@ export default function LoginPage() {
             const { session } = await signIn(email, password);
             if (session) {
                 api.setToken(session.access_token);
-                router.push('/scan');
+                router.replace('/scan');
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Login failed');
