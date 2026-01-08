@@ -7,17 +7,35 @@ import { api } from '@/lib/api';
 import VoiceButton from '@/components/VoiceButton';
 import { BrowserMultiFormatReader } from '@zxing/library';
 
+interface BillItem {
+    productId: string;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+interface VerificationResult {
+    valid: boolean;
+    message: string;
+    bill?: {
+        id: string;
+        bill_number: string;
+        total_amount: number;
+        total_items: number;
+        items?: BillItem[];
+    };
+    payload?: {
+        items?: BillItem[];
+    };
+}
+
 export default function GuardDashboardPage() {
     const router = useRouter();
     const videoRef = useRef<HTMLVideoElement>(null);
     const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
 
     const [scanning, setScanning] = useState(false);
-    const [verificationResult, setVerificationResult] = useState<{
-        valid: boolean;
-        message: string;
-        bill?: { bill_number: string; total_amount: number; total_items: number };
-    } | null>(null);
+    const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [todayStats, setTodayStats] = useState({ verified: 0, flagged: 0 });
 
@@ -81,14 +99,17 @@ export default function GuardDashboardPage() {
             const result = await api.validateQR(qrData);
             if (result.valid && result.bill) {
                 await api.verifyBill(result.bill.id);
+                const payload = result.payload as { items?: BillItem[] } | undefined;
                 setVerificationResult({
                     valid: true,
                     message: 'Payment Verified ✓',
                     bill: {
+                        id: result.bill.id,
                         bill_number: result.bill.bill_number,
                         total_amount: result.bill.total_amount,
                         total_items: result.bill.total_items,
                     },
+                    payload,
                 });
                 setTodayStats(prev => ({ ...prev, verified: prev.verified + 1 }));
             } else {
@@ -198,10 +219,24 @@ export default function GuardDashboardPage() {
                             {verificationResult.message}
                         </h2>
                         {verificationResult.bill && (
-                            <div className="mt-4 space-y-2 text-slate-400">
-                                <p>Bill #{verificationResult.bill.bill_number}</p>
-                                <p>{verificationResult.bill.total_items} items</p>
-                                <p className="text-xl font-bold text-white">₹{verificationResult.bill.total_amount.toFixed(2)}</p>
+                            <div className="mt-4 text-slate-400">
+                                <p className="mb-2">Bill #{verificationResult.bill.bill_number}</p>
+                                <p className="text-xl font-bold text-white mb-4">₹{verificationResult.bill.total_amount.toFixed(2)}</p>
+
+                                {/* Items List */}
+                                {verificationResult.payload?.items && verificationResult.payload.items.length > 0 && (
+                                    <div className="text-left mt-4 border-t border-slate-700 pt-4">
+                                        <p className="text-sm font-semibold text-slate-300 mb-2">Items ({verificationResult.bill.total_items}):</p>
+                                        <div className="max-h-40 overflow-y-auto space-y-1">
+                                            {verificationResult.payload.items.map((item, idx) => (
+                                                <div key={idx} className="flex justify-between text-sm">
+                                                    <span>{item.quantity}x {item.name}</span>
+                                                    <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                         <button
