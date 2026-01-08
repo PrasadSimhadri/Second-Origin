@@ -34,11 +34,11 @@ export const RATE_LIMITS = {
     // Voice commands - moderate
     voice: { windowMs: 60000, maxRequests: 30 },
     // Admin routes - relaxed for legitimate admin use
-    admin: { windowMs: 60000, maxRequests: 100 },
+    admin: { windowMs: 60000, maxRequests: 1000 },
     // Standard API routes
-    standard: { windowMs: 60000, maxRequests: 60 },
+    standard: { windowMs: 60000, maxRequests: 200 },
     // Public routes (products lookup)
-    public: { windowMs: 60000, maxRequests: 120 },
+    public: { windowMs: 60000, maxRequests: 300 },
 } as const;
 
 export function getClientIdentifier(request: NextRequest): string {
