@@ -1,135 +1,64 @@
-# Turborepo starter
+# ScanKart - Autonomous Checkout System
 
-This Turborepo starter is maintained by the Turborepo core team.
+A complete Scan-and-Pay platform featuring a Customer App, Guard App, Admin Dashboard, and NestJS Backend.
 
-## Using this example
+## 🚀 Quick Start
 
-Run the following command:
+### Prerequisites
+- Docker & Docker Compose
+- Node.js (Optional, only for local dev)
 
-```sh
-npx create-turbo@latest
+### 1. Configure Environment
+Create a `.env` file in the root directory (or ask the project owner for credentials). The system requires Supabase and other API keys.
+
+### 2. Run with Docker (Recommended)
+This command builds all applications and starts them in containers.
+
+```bash
+docker-compose up --build
 ```
+*Note: The first build may take a few minutes.*
 
-## What's inside?
+### 3. Access Modules
+Once running, open the **Project Hub** at:
+👉 **http://localhost:3000**
 
-This Turborepo includes the following packages/apps:
+Direct links:
+- **Customer App**: [http://localhost:3002](http://localhost:3002) (Mobile View)
+- **Guard App**: [http://localhost:3003](http://localhost:3003) (Mobile View)
+- **Admin Dashboard**: [http://localhost:3004](http://localhost:3004)
+- **Backend API**: [http://localhost:3001/api/v1](http://localhost:3001/api/v1)
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🛠️ Module Features
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### 🛒 Customer App
+- **Scan & Pay**: Scan barcodes (using camera or manual hackathon entry).
+- **Smart Cart**: Visual threshold indicators.
+- **Checkout**: Generate exit QR for verification.
+- **Hackathon Mode**: Manual barcode entry for testing without physical products.
 
-### Utilities
+### 👮 Guard App
+- **Verify**: Scan customer exit QR codes.
+- **Voice Agent**: "Verify Bill", "Flag", "List Items".
+- **Security**: Flag suspicious transactions with evidence.
 
-This Turborepo has some additional tools already setup for you:
+### 📊 Admin Dashboard
+- **Analytics**: Revenue, shrinkage, and flag stats.
+- **Manage**: Update store thresholds and resolve flags.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## 🔧 Troubleshooting
 
-To build all apps and packages, run the following command:
+- **Ports in use?** Stop other services on 3000-3004.
+- **Scanner not working?** Ensure your browser allows camera access (requires HTTPS or localhost).
+- **Voice not working?** Check browser permissions.
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## 📁 Repository Structure
+- `apps/backend`: NestJS API
+- `apps/customer`: Next.js PWA
+- `apps/guard`: Next.js PWA
+- `apps/admin`: Next.js Dashboard
+- `packages/shared`: Shared types & utils
