@@ -302,7 +302,7 @@ export class AdminService {
             .select(`guard_id, guard:users(full_name)`);
 
         const flagsByGuardMap: Record<string, { name: string; count: number }> = {};
-        flagsByGuardData?.forEach((f: { guard_id: string; guard: { full_name: string } | null }) => {
+        flagsByGuardData?.forEach((f: any) => {
             if (!flagsByGuardMap[f.guard_id]) {
                 flagsByGuardMap[f.guard_id] = { name: f.guard?.full_name || 'Unknown', count: 0 };
             }

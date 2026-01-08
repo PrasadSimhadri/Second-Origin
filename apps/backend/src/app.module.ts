@@ -25,7 +25,7 @@ import { SupabaseModule } from './common/supabase/supabase.module';
         // Environment configuration
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: '../../.env.example',
+            envFilePath: ['.env', '../../.env'],
         }),
 
         // Rate limiting - global throttler

@@ -9,7 +9,7 @@ import { BillsService } from '../bills/bills.service';
 import { FlagsService, FlagReason } from '../flags/flags.service';
 
 // Voice command intents
-type VoiceIntent =
+export type VoiceIntent =
     | 'verify_bill'
     | 'flag_bill'
     | 'list_items'
@@ -21,7 +21,7 @@ type VoiceIntent =
     | 'cancel'
     | 'unknown';
 
-interface VoiceCommand {
+export interface VoiceCommand {
     intent: VoiceIntent;
     entities: Record<string, string>;
     confidence: number;
