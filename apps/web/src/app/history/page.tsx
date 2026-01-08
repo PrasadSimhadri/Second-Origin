@@ -26,7 +26,7 @@ export default function HistoryPage() {
     const loadHistory = async () => {
         try {
             const data = await api.getMyBills();
-            setBills(data);
+            setBills(data.filter(b => b.total_items > 0));
         } catch (e) {
             console.error(e);
         } finally {
@@ -55,8 +55,8 @@ export default function HistoryPage() {
                                     <div className="text-xs text-slate-500">{new Date(bill.created_at).toLocaleDateString()}</div>
                                 </div>
                                 <span className={`px-2 py-1 rounded text-xs font-bold ${bill.status === 'paid' ? 'bg-green-500/20 text-green-400' :
-                                        bill.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                                            'bg-slate-700 text-slate-300'
+                                    bill.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                                        'bg-slate-700 text-slate-300'
                                     }`}>
                                     {bill.status.toUpperCase()}
                                 </span>
