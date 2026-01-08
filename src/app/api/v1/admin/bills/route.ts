@@ -16,26 +16,49 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
 
     try {
+        // First get all bills
         let query = client
             .from('bills')
-            .select(`
-                *,
-                customer:users!bills_customer_id_fkey(id, email, full_name),
-                store:stores(id, name, code)
-            `)
-            .order('created_at', { ascending: false });
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(100);
 
         if (status) {
             query = query.eq('status', status);
         }
 
-        const { data: bills, error: billsError } = await query.limit(100);
+        const { data: bills, error: billsError } = await query;
 
-        if (billsError) throw billsError;
+        if (billsError) {
+            console.error('Bills query error:', billsError);
+            throw billsError;
+        }
 
-        return NextResponse.json(bills || []);
+        // Enrich with customer info
+        const enrichedBills = await Promise.all(
+            (bills || []).map(async (bill) => {
+                // Get customer
+                const { data: customer } = await client
+                    .from('users')
+                    .select('id, email, full_name')
+                    .eq('id', bill.customer_id)
+                    .single();
+
+                // Get store
+                const { data: store } = await client
+                    .from('stores')
+                    .select('id, name, code')
+                    .eq('id', bill.store_id)
+                    .single();
+
+                return { ...bill, customer, store };
+            })
+        );
+
+        return NextResponse.json(enrichedBills);
     } catch (err) {
         console.error('Admin bills error:', err);
         return NextResponse.json({ error: 'Failed to fetch bills' }, { status: 500 });
     }
 }
+
