@@ -10,11 +10,12 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { VoiceService } from './voice.service';
+import { VoiceService, ConversationState } from './voice.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { IsOptional } from 'class-validator';
 
 interface UserProfile {
     id: string;
@@ -22,7 +23,12 @@ interface UserProfile {
 
 class ProcessCommandDto {
     text: string;
+
+    @IsOptional()
     billId?: string;
+
+    @IsOptional()
+    context?: ConversationState;
 }
 
 class GenerateSpeechDto {
@@ -61,6 +67,7 @@ export class VoiceController {
             user.id,
             command,
             dto.billId,
+            dto.context
         );
 
         // Generate TTS if available
