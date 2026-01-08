@@ -3,7 +3,7 @@
 // ===========================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, getAdminClient } from '@/lib/supabase';
+import { getAdminClient } from '@/lib/supabase';
 
 export interface AuthUser {
     id: string;
@@ -32,10 +32,12 @@ export async function authenticateRequest(
     const token = authHeader.substring(7);
 
     try {
-        // Verify token with Supabase
-        const { data: { user }, error } = await supabase.auth.getUser(token);
+        // Use admin client for server-side token verification
+        const adminClient = getAdminClient();
+        const { data: { user }, error } = await adminClient.auth.getUser(token);
 
         if (error || !user) {
+            console.error('Token verification failed:', error?.message);
             return {
                 user: null,
                 error: NextResponse.json(
@@ -46,7 +48,6 @@ export async function authenticateRequest(
         }
 
         // Get user profile
-        const adminClient = getAdminClient();
         const { data: profile, error: profileError } = await adminClient
             .from('users')
             .select('*')
