@@ -1,46 +1,30 @@
--- ===========================================
--- ScanKart Seed Data
--- Migration: 002_seed_products
--- ===========================================
+-- Clear existing products
+DELETE FROM products;
 
--- ===========================================
--- Seed Sample Products (20 items for Phase 1)
--- ===========================================
-
-INSERT INTO products (store_id, barcode, name, description, price, category, weight_grams) VALUES
--- Groceries
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030865824', 'Tata Salt (1kg)', 'Iodized table salt', 28.00, 'Groceries', 1000),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901725181239', 'Aashirvaad Atta (5kg)', 'Whole wheat flour', 295.00, 'Groceries', 5000),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901063010116', 'Fortune Sunflower Oil (1L)', 'Refined sunflower oil', 145.00, 'Groceries', 1000),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030584732', 'Tata Tea Gold (500g)', 'Premium tea leaves', 285.00, 'Beverages', 500),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901719110016', 'India Gate Basmati Rice (1kg)', 'Premium aged basmati rice', 175.00, 'Groceries', 1000),
-
--- Dairy
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901057022023', 'Amul Toned Milk (1L)', 'Fresh toned milk', 60.00, 'Dairy', 1030),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901057001004', 'Amul Butter (500g)', 'Pasteurized butter', 280.00, 'Dairy', 500),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901057420314', 'Amul Cheese Slices (200g)', 'Processed cheese slices', 135.00, 'Dairy', 200),
-
--- Snacks & Instant Food
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901491101325', 'Maggi 2-Minute Noodles (Pack of 8)', 'Instant noodles family pack', 112.00, 'Snacks', 560),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901491501224', 'Lays Classic Salted (95g)', 'Potato chips', 40.00, 'Snacks', 95),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901063204201', 'Parle-G Biscuits (800g)', 'Glucose biscuits family pack', 85.00, 'Snacks', 800),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8902102101684', 'Britannia Marie Gold (300g)', 'Light tea biscuits', 55.00, 'Snacks', 300),
-
--- Beverages
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901245115421', 'Coca-Cola (2L)', 'Carbonated soft drink', 95.00, 'Beverages', 2100),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030519611', 'Tropicana Orange Juice (1L)', 'Pure orange juice', 110.00, 'Beverages', 1050),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901057453127', 'Bisleri Water (1L)', 'Packaged drinking water', 20.00, 'Beverages', 1000),
-
--- Personal Care
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901314010100', 'Colgate MaxFresh (150g)', 'Gel toothpaste', 95.00, 'Personal Care', 150),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030010637', 'Dettol Original Soap (75g x 4)', 'Antibacterial soap', 180.00, 'Personal Care', 300),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901057400514', 'Dove Shampoo (340ml)', 'Hair shampoo', 299.00, 'Personal Care', 380),
-
--- Household
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030006302', 'Surf Excel Matic (2kg)', 'Front load detergent', 425.00, 'Household', 2000),
-('f47ac10b-58cc-4372-a567-0e02b2c3d479', '8901030001055', 'Vim Dishwash Bar (500g)', 'Dishwashing soap', 55.00, 'Household', 500);
-
--- ===========================================
--- Note: User creation happens through Supabase Auth
--- Admin users should be created manually and updated in users table
--- ===========================================
+-- Insert new products for Indian Supermarket
+INSERT INTO products (store_id, name, barcode, price, category, image_url) VALUES
+((SELECT id FROM stores LIMIT 1), 'Rice - 1 kg', '8901000100011', 60.00, 'Staples', 'https://via.placeholder.com/150?text=Rice+1kg'),
+((SELECT id FROM stores LIMIT 1), 'Rice - 5 kg', '8901000100059', 280.00, 'Staples', 'https://via.placeholder.com/150?text=Rice+5kg'),
+((SELECT id FROM stores LIMIT 1), 'Wheat Atta - 1 kg', '8901000200018', 45.00, 'Staples', 'https://via.placeholder.com/150?text=Atta+1kg'),
+((SELECT id FROM stores LIMIT 1), 'Wheat Atta - 5 kg', '8901000200056', 210.00, 'Staples', 'https://via.placeholder.com/150?text=Atta+5kg'),
+((SELECT id FROM stores LIMIT 1), 'Maida - 1 kg', '8901000300015', 40.00, 'Staples', 'https://via.placeholder.com/150?text=Maida'),
+((SELECT id FROM stores LIMIT 1), 'Rava / Sooji - 1 kg', '8901000400012', 45.00, 'Staples', 'https://via.placeholder.com/150?text=Rava'),
+((SELECT id FROM stores LIMIT 1), 'Besan - 1 kg', '8901000500019', 90.00, 'Staples', 'https://via.placeholder.com/150?text=Besan'),
+((SELECT id FROM stores LIMIT 1), 'Poha - 1 kg', '8901000600016', 50.00, 'Staples', 'https://via.placeholder.com/150?text=Poha'),
+((SELECT id FROM stores LIMIT 1), 'Dalia - 1 kg', '8901000700013', 55.00, 'Staples', 'https://via.placeholder.com/150?text=Dalia'),
+((SELECT id FROM stores LIMIT 1), 'Multigrain Atta - 1 kg', '8901000800010', 65.00, 'Staples', 'https://via.placeholder.com/150?text=Multi+Atta'),
+((SELECT id FROM stores LIMIT 1), 'Brown Rice - 1 kg', '8901000900017', 90.00, 'Staples', 'https://via.placeholder.com/150?text=Brown+Rice'),
+((SELECT id FROM stores LIMIT 1), 'Basmati Rice - 1 kg', '8901001000013', 120.00, 'Staples', 'https://via.placeholder.com/150?text=Basmati'),
+((SELECT id FROM stores LIMIT 1), 'Toor Dal - 1 kg', '8901001100010', 140.00, 'Pulses', 'https://via.placeholder.com/150?text=Toor+Dal'),
+((SELECT id FROM stores LIMIT 1), 'Moong Dal - 1 kg', '8901001200017', 110.00, 'Pulses', 'https://via.placeholder.com/150?text=Moong+Dal'),
+((SELECT id FROM stores LIMIT 1), 'Chana Dal - 1 kg', '8901001300014', 90.00, 'Pulses', 'https://via.placeholder.com/150?text=Chana+Dal'),
+((SELECT id FROM stores LIMIT 1), 'Masoor Dal - 1 kg', '8901001400011', 100.00, 'Pulses', 'https://via.placeholder.com/150?text=Masoor+Dal'),
+((SELECT id FROM stores LIMIT 1), 'Whole Green Moong - 1 kg', '8901001500018', 120.00, 'Pulses', 'https://via.placeholder.com/150?text=Green+Moong'),
+((SELECT id FROM stores LIMIT 1), 'Kabuli Chana - 1 kg', '8901001600015', 130.00, 'Pulses', 'https://via.placeholder.com/150?text=Kabuli+Chana'),
+((SELECT id FROM stores LIMIT 1), 'Black Chana - 1 kg', '8901001700012', 85.00, 'Pulses', 'https://via.placeholder.com/150?text=Black+Chana'),
+((SELECT id FROM stores LIMIT 1), 'Rajma - 1 kg', '8901001800019', 125.00, 'Pulses', 'https://via.placeholder.com/150?text=Rajma'),
+((SELECT id FROM stores LIMIT 1), 'Sugar - 1 kg', '8901001900016', 42.00, 'Sugar & Salt', 'https://via.placeholder.com/150?text=Sugar'),
+((SELECT id FROM stores LIMIT 1), 'Salt - 1 kg', '8901002000012', 25.00, 'Sugar & Salt', 'https://via.placeholder.com/150?text=Salt'),
+((SELECT id FROM stores LIMIT 1), 'Jaggery - 1 kg', '8901002100019', 60.00, 'Sugar & Salt', 'https://via.placeholder.com/150?text=Jaggery'),
+((SELECT id FROM stores LIMIT 1), 'Curd - 500 g', '8901002200016', 35.00, 'Dairy', 'https://via.placeholder.com/150?text=Curd'),
+((SELECT id FROM stores LIMIT 1), 'Paneer - 200 g', '8901002300013', 95.00, 'Dairy', 'https://via.placeholder.com/150?text=Paneer');

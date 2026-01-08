@@ -516,7 +516,7 @@ VALUES (
     'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     'ScanKart Demo Store',
     'DEMO001',
-    '123 Main Street, Mumbai, Maharashtra 400001',
+    'Avinashi Road, Coimbatore, Tamil Nadu 641006',
     5000.00,
     20
 );
