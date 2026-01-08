@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - QR_SIGNING_SECRET=${QR_SIGNING_SECRET:-scankart-qr-secret}
+    restart: unless-stopped
+
+# Usage:
+# 1. Create .env file with your Supabase credentials
+# 2. Run: docker-compose up --build
+# 3. Access: http://localhost:3000

@@ -226,7 +226,7 @@ class ApiClient {
 
     async getAllBills(status?: string) {
         const params = status ? `?status=${status}` : '';
-        return this.request<BillWithDetails[]>(`/bills${params}`);
+        return this.request<BillWithDetails[]>(`/admin/bills${params}`);
     }
 
     async getUsers(role?: string) {
