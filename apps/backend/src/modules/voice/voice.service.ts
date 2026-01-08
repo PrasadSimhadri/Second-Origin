@@ -28,7 +28,7 @@ export interface VoiceCommand {
     rawText: string;
 }
 
-interface ConversationState {
+export interface ConversationState {
     currentBillId?: string;
     currentFlagId?: string;
     awaitingConfirmation?: 'flag' | 'evidence';
@@ -38,7 +38,8 @@ interface ConversationState {
 
 @Injectable()
 export class VoiceService {
-    private conversationStates: Map<string, ConversationState> = new Map();
+    // Stateless architecture - no in-memory storage
+
 
     constructor(
         private readonly supabaseService: SupabaseService,
@@ -85,9 +86,10 @@ export class VoiceService {
         guardId: string,
         command: VoiceCommand,
         billId?: string,
-    ): Promise<{ text: string; action?: string; data?: Record<string, unknown> }> {
-        // Get or create conversation state
-        let state = this.conversationStates.get(guardId) || {};
+        context: ConversationState = {}
+    ): Promise<{ text: string; action?: string; data?: Record<string, unknown>; context: ConversationState }> {
+        // Use provided context or empty state
+        let state = context;
 
         if (billId) {
             state.currentBillId = billId;
@@ -138,11 +140,13 @@ export class VoiceService {
                 };
         }
 
-        // Save state
-        this.conversationStates.set(guardId, state);
+        // Return updated state
         state.lastResponse = response.text;
 
-        return response;
+        return {
+            ...response,
+            context: state
+        };
     }
 
     /**
@@ -495,9 +499,9 @@ export class VoiceService {
     }
 
     /**
-     * Clear conversation state
+     * Clear conversation state (No-op in stateless mode)
      */
     clearState(guardId: string) {
-        this.conversationStates.delete(guardId);
+        // Stateless: Client clears its own context
     }
 }

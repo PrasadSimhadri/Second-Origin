@@ -21,6 +21,7 @@ export default function GuardDashboard() {
   const [verifyResult, setVerifyResult] = useState<QRValidationResult | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('Ready to scan');
   const [voiceTranscript, setVoiceTranscript] = useState<string>('');
+  const [voiceContext, setVoiceContext] = useState<any>(null); // Stateless context
 
   useEffect(() => {
     checkAuth();
@@ -132,7 +133,11 @@ export default function GuardDashboard() {
 
     try {
       const billId = verifyResult?.bill?.id || verifyResult?.payload?.billId;
-      const response = await api.processVoiceCommand(text, billId);
+      const response = await api.processVoiceCommand(text, billId, voiceContext);
+
+      if (response.context) {
+        setVoiceContext(response.context);
+      }
 
       if (response.text) {
         setStatusMessage(response.text);
@@ -197,7 +202,9 @@ export default function GuardDashboard() {
     // Fire and forget speech generation if just text needed locally, 
     // but better to use the API which might return audio
     try {
-      const response = await api.processVoiceCommand(text); // Re-using command endpoint for simple TTS echo effectively
+      const response = await api.processVoiceCommand(text, undefined, voiceContext); // Pass context
+      if (response.context) setVoiceContext(response.context);
+
       if (response.audioUrl) {
         await playAudio(response.audioUrl);
       }

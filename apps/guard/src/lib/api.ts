@@ -84,10 +84,10 @@ class ApiClient {
         return this.request<{ token: string; roomName: string; url: string }>(`/voice/token${params}`);
     }
 
-    async processVoiceCommand(text: string, billId?: string) {
+    async processVoiceCommand(text: string, billId?: string, context?: any) {
         return this.request<VoiceResponse>('/voice/command', {
             method: 'POST',
-            body: JSON.stringify({ text, billId }),
+            body: JSON.stringify({ text, billId, context }),
         });
     }
 }
@@ -157,6 +157,7 @@ interface VoiceResponse {
     audioUrl?: string;
     action?: string;
     data?: Record<string, unknown>;
+    context?: any;
 }
 
 export const api = new ApiClient();
