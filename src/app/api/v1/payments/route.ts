@@ -5,9 +5,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PaymentsService } from '@/lib/services/payments.service';
 import { authenticateRequest } from '@/lib/middleware/auth';
+import { rateLimit, RATE_LIMITS } from '@/lib/middleware/rate-limit';
 
 // POST /api/v1/payments - Initiate payment
 export async function POST(request: NextRequest) {
+    // Rate limit: 60 requests per minute
+    const { success, response } = rateLimit(request, RATE_LIMITS.standard);
+    if (!success) return response;
+
     const { user, error } = await authenticateRequest(request, ['customer']);
     if (error) return error;
 
@@ -23,3 +28,4 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: message }, { status: 400 });
     }
 }
+

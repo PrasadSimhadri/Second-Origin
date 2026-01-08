@@ -5,9 +5,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BillsService } from '@/lib/services/bills.service';
 import { authenticateRequest } from '@/lib/middleware/auth';
+import { rateLimit, RATE_LIMITS } from '@/lib/middleware/rate-limit';
 
 // GET /api/v1/bills - Get current user's bills
 export async function GET(request: NextRequest) {
+    const { success, response } = rateLimit(request, RATE_LIMITS.standard);
+    if (!success) return response;
     const { user, error } = await authenticateRequest(request, ['customer']);
     if (error) return error;
 
@@ -24,6 +27,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/v1/bills - Create a new bill
 export async function POST(request: NextRequest) {
+    const { success, response } = rateLimit(request, RATE_LIMITS.standard);
+    if (!success) return response;
+
     const { user, error } = await authenticateRequest(request, ['customer']);
     if (error) return error;
 
