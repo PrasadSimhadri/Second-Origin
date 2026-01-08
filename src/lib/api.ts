@@ -191,27 +191,18 @@ class ApiClient {
     // Admin API Methods
     async getAnalytics(storeId?: string) {
         const params = storeId ? `?storeId=${storeId}` : '';
-        // Mock analytics for now - would need admin endpoint
-        return {
-            totalBills: 0,
-            totalRevenue: 0,
-            flaggedBillsCount: 0,
-            confirmedFlags: 0,
-            rejectedFlags: 0,
-            shrinkageRate: 0,
-            falsePositiveRate: 0,
-            flagsByReason: {},
-            flagsByGuard: [],
-        } as Analytics;
+        return this.request<Analytics>(`/admin/analytics${params}`);
     }
 
     async getStores() {
-        // Mock - would need admin endpoint
-        return [] as Store[];
+        return this.request<Store[]>('/admin/stores');
     }
 
     async updateThresholds(storeId: string, priceThreshold?: number, quantityThreshold?: number) {
-        return {} as Store;
+        return this.request<Store>('/admin/stores', {
+            method: 'PUT',
+            body: JSON.stringify({ storeId, priceThreshold, quantityThreshold }),
+        });
     }
 
     async getPendingFlags() {
@@ -239,11 +230,15 @@ class ApiClient {
     }
 
     async getUsers(role?: string) {
-        return [] as User[];
+        const params = role ? `?role=${role}` : '';
+        return this.request<User[]>(`/admin/users${params}`);
     }
 
     async updateUserStatus(userId: string, action: 'block' | 'unblock', reason?: string) {
-        return {};
+        return this.request('/admin/users', {
+            method: 'PUT',
+            body: JSON.stringify({ userId, action, reason }),
+        });
     }
 }
 
