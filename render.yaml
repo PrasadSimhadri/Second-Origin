@@ -9,6 +9,8 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      - key: NODE_VERSION
+        value: 20.10.0
       - key: NODE_ENV
         value: production
       # Supabase

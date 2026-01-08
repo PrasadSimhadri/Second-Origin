@@ -4,7 +4,7 @@
     "description": "ScanKart Backend API",
     "private": true,
     "scripts": {
-        "build": "npx nest build",
+        "build": "npx @nestjs/cli build",
         "dev": "nest start --watch",
         "start": "node dist/main",
         "start:debug": "nest start --debug --watch",
