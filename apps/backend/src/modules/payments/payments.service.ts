@@ -6,8 +6,15 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { SupabaseService } from '../../common/supabase/supabase.service';
 import { v4 as uuidv4 } from 'uuid';
 
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
 export class InitiatePaymentDto {
+    @IsString()
+    @IsNotEmpty()
     billId: string;
+
+    @IsString()
+    @IsOptional()
     paymentMethod?: string;
 }
 

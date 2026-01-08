@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: scankart-backend
+    env: node
+    plan: free
+    region: singapore # Optional: Choose closest region
+    buildCommand: npm install && npx turbo run build --filter=backend
+    startCommand: node apps/backend/dist/main
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      # Supabase
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      # Security
+      - key: JWT_SECRET
+        generateValue: true
+      - key: QR_SIGNING_SECRET
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: '*' # Update this with Vercel URLs after deployment
+      # APIs
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: LIVEKIT_URL
+        sync: false
+      - key: MURF_API_KEY
+        sync: false
