@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         // Group flags by guard
         const guardMap = new Map<string, { guardId: string; guardName: string; count: number }>();
         flags?.forEach(f => {
-            const guard = f.guard as { id: string; full_name: string } | null;
+            const guard = f.guard as unknown as { id: string; full_name: string } | null;
             if (guard) {
                 const existing = guardMap.get(guard.id);
                 if (existing) {

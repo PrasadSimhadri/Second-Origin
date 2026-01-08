@@ -28,10 +28,11 @@ export class AuthService {
     static async register(dto: RegisterDto) {
         const adminClient = getAdminClient();
 
-        // Create auth user
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        // Create auth user using admin client (auto-confirms email)
+        const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
             email: dto.email,
             password: dto.password,
+            email_confirm: true, // Auto-confirm email
         });
 
         if (authError) {
@@ -58,9 +59,15 @@ export class AuthService {
             throw new Error('Failed to create user profile');
         }
 
+        // Now sign in the user to get a session
+        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+            email: dto.email,
+            password: dto.password,
+        });
+
         return {
             user: authData.user,
-            session: authData.session,
+            session: loginError ? null : loginData.session,
             message: 'Registration successful',
         };
     }

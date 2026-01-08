@@ -327,14 +327,51 @@ export default function ScanPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-64 text-center opacity-50">
-                        <div className="w-24 h-24 rounded-full bg-slate-800/50 flex items-center justify-center mb-4">
-                            <svg className="w-12 h-12 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mb-6 border border-blue-500/30">
+                            <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </div>
-                        <p className="text-lg font-medium text-slate-300">Your cart is empty</p>
-                        <p className="text-sm text-slate-500 mt-1">Scan items to get started</p>
+                        <h2 className="text-xl font-bold text-white mb-2">Start Shopping!</h2>
+                        <p className="text-sm text-slate-400 mb-8 max-w-xs">Add items to your cart using one of the methods below</p>
+
+                        {/* Feature Guide */}
+                        <div className="w-full max-w-sm space-y-3 px-4">
+                            <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex items-start gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+                                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                                    </svg>
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-white">QR / Barcode Scan</h3>
+                                    <p className="text-xs text-slate-400">Use your camera to scan product barcodes</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex items-start gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                                    <span className="text-lg">⌨️</span>
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-white">Manual Entry</h3>
+                                    <p className="text-xs text-slate-400">Search and add products by name or barcode</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex items-start gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0">
+                                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-white">Order History</h3>
+                                    <p className="text-xs text-slate-400">View past orders using the clock icon above</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
