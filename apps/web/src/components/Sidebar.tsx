@@ -6,11 +6,11 @@ import { supabase } from '@/lib/supabase-client';
 import { api } from '@/lib/api';
 
 const NAV_ITEMS = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/bills', label: 'Transactions', icon: '💳' },
-    { href: '/flags', label: 'Flag Resolution', icon: '🚩' },
-    { href: '/users', label: 'User Management', icon: '👥' },
-    { href: '/thresholds', label: 'Store Config', icon: '⚙️' },
+    { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+    { href: '/admin/bills', label: 'Transactions', icon: '💳' },
+    { href: '/admin/flags', label: 'Flag Resolution', icon: '🚩' },
+    { href: '/admin/users', label: 'User Management', icon: '👥' },
+    { href: '/admin/thresholds', label: 'Store Config', icon: '⚙️' },
 ];
 
 export default function Sidebar() {
@@ -40,8 +40,8 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-slate-400 hover:text-white hover:bg-slate-800'
                                 }`}
                         >
                             <span>{item.icon}</span>

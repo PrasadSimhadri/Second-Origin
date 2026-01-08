@@ -1,64 +1,86 @@
-# ScanKart - Autonomous Checkout System
+# ScanKart - Unified Checkout System
 
-A complete Scan-and-Pay platform featuring a Customer App, Guard App, Admin Dashboard, and NestJS Backend.
+A comprehensive retail checkout solution combining self-service scanning with anti-theft verification.
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Docker & Docker Compose
-- Node.js (Optional, only for local dev)
-
-### 1. Configure Environment
-Create a `.env` file in the root directory (or ask the project owner for credentials). The system requires Supabase and other API keys.
-
-### 2. Run with Docker (Recommended)
-This command builds all applications and starts them in containers.
+## 🚀 Quick Start (Docker - Recommended)
 
 ```bash
+# Clone and run
+git clone https://github.com/PrasadSimhadri/Second-Origin.git
+cd Second-Origin
 docker-compose up --build
 ```
-*Note: The first build may take a few minutes.*
 
-### 3. Access Modules
-Once running, open the **Project Hub** at:
-👉 **http://localhost:3000**
+Access at: http://localhost:3000
 
-Direct links:
-- **Customer App**: [http://localhost:3002](http://localhost:3002) (Mobile View)
-- **Guard App**: [http://localhost:3003](http://localhost:3003) (Mobile View)
-- **Admin Dashboard**: [http://localhost:3004](http://localhost:3004)
-- **Backend API**: [http://localhost:3001/api/v1](http://localhost:3001/api/v1)
+## 🛠️ Local Development
 
----
+```bash
+# Install dependencies
+cd apps/web && npm install
 
-## 🛠️ Module Features
+# Set environment variables
+cp .env.example .env
+# Edit .env with your Supabase credentials
 
-### 🛒 Customer App
-- **Scan & Pay**: Scan barcodes (using camera or manual hackathon entry).
-- **Smart Cart**: Visual threshold indicators.
-- **Checkout**: Generate exit QR for verification.
-- **Hackathon Mode**: Manual barcode entry for testing without physical products.
+# Run development server
+npm run dev
+```
 
-### 👮 Guard App
-- **Verify**: Scan customer exit QR codes.
-- **Voice Agent**: "Verify Bill", "Flag", "List Items".
-- **Security**: Flag suspicious transactions with evidence.
+## 📋 Problem Statement
 
-### 📊 Admin Dashboard
-- **Analytics**: Revenue, shrinkage, and flag stats.
-- **Manage**: Update store thresholds and resolve flags.
+**Domain:** Retail / Smart Checkout
 
----
+Traditional checkout systems are inefficient and prone to theft. ScanKart solves this with:
+- **Self-scanning** for customers (faster checkout)
+- **AI-powered verification** at exit gates
+- **Role-based access** (Customer, Guard, Admin)
+- **Dynamic thresholds** for fraud prevention
 
-## 🔧 Troubleshooting
+## 🏗️ Architecture
 
-- **Ports in use?** Stop other services on 3000-3004.
-- **Scanner not working?** Ensure your browser allows camera access (requires HTTPS or localhost).
-- **Voice not working?** Check browser permissions.
+```
+├── apps/web          # Next.js 16 application (all roles)
+│   ├── src/app/      # App Router pages
+│   │   ├── api/v1/   # API routes (auth, bills, products, etc.)
+│   │   ├── admin/    # Admin dashboard
+│   │   ├── guard/    # Guard verification interface
+│   │   ├── scan/     # Customer scanning interface
+│   │   └── checkout/ # Payment flow
+│   └── src/lib/      # Supabase client, API utilities
+├── supabase/         # Database migrations
+└── scripts/          # Seed scripts
+```
 
-## 📁 Repository Structure
-- `apps/backend`: NestJS API
-- `apps/customer`: Next.js PWA
-- `apps/guard`: Next.js PWA
-- `apps/admin`: Next.js Dashboard
-- `packages/shared`: Shared types & utils
+## 🔐 Security Features
+
+1. **Rate Limiting:** API routes protected against abuse
+2. **JWT Authentication:** Supabase Auth with role-based access
+3. **CORS:** Strict origin validation
+4. **Input Validation:** Server-side validation on all routes
+
+## 👥 Test Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Customer | customer@scankart.com | password123 |
+| Guard | guard@scankart.com | password123 |
+| Admin | admin@scankart.com | password123 |
+
+## ⚠️ Known Limitations
+
+1. Voice assistant requires LiveKit API keys (optional)
+2. Product images are placeholder-based
+3. Razorpay integration is mocked for hackathon
+
+## 📦 Environment Variables
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_key
+```
+
+## 📄 License
+
+MIT

@@ -2,25 +2,12 @@
   "name": "scankart",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=web",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types",
-    "db:migrate": "cd supabase && npx supabase db push"
-  },
-  "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.7.3",
-    "typescript": "5.9.2"
+    "build": "cd apps/web && npm run build",
+    "dev": "cd apps/web && npm run dev",
+    "start": "cd apps/web && npm run start",
+    "lint": "cd apps/web && npm run lint"
   },
   "engines": {
     "node": ">=18"
-  },
-  "packageManager": "npm@11.2.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  }
 }
