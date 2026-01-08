@@ -7,8 +7,7 @@ export default function CustomerHome() {
     const router = useRouter();
 
     useEffect(() => {
-        // Redirect to the scan page or handle auth check
-        router.push('/scan');
+        router.push('/login');
     }, [router]);
 
     return (

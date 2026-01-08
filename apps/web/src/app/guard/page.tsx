@@ -7,7 +7,6 @@ export default function GuardHome() {
     const router = useRouter();
 
     useEffect(() => {
-        // Redirect to guard dashboard
         router.push('/guard/login');
     }, [router]);
 
