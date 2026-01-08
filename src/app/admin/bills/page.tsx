@@ -10,6 +10,7 @@ export default function BillsPage() {
     const router = useRouter();
     const [bills, setBills] = useState<BillWithDetails[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [statusFilter, setStatusFilter] = useState('all');
 
     useEffect(() => {
@@ -17,16 +18,24 @@ export default function BillsPage() {
     }, [statusFilter]);
 
     const loadBills = async () => {
+        setLoading(true);
+        setError(null);
+
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
             router.push('/admin/login');
             return;
         }
         api.setToken(session.access_token);
+
         try {
             const status = statusFilter === 'all' ? undefined : statusFilter;
             const data = await api.getAllBills(status);
+            console.log('Bills loaded:', data);
             setBills(data);
+        } catch (err) {
+            console.error('Failed to load bills:', err);
+            setError(err instanceof Error ? err.message : 'Failed to load bills');
         } finally {
             setLoading(false);
         }
@@ -37,6 +46,12 @@ export default function BillsPage() {
             <Sidebar />
             <main className="ml-64 flex-1 p-8 bg-slate-900 min-h-screen">
                 <h1 className="text-2xl font-bold mb-8 text-white">Transactions</h1>
+
+                {error && (
+                    <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg mb-6">
+                        Error: {error}
+                    </div>
+                )}
 
                 <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
                     {['all', 'pending', 'paid', 'verified', 'flagged'].map((status) => (
